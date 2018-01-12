@@ -34,7 +34,13 @@ def home(id):
     return jsonify(lista)
 
 
-# Retorna uma página com 30 itens.
+@app.route('/user/<string:id>/insere', methods=['POST'])
+def insereContato(id):
+    dados = request.data
+    print(dados)
+    return jsonify({'status': True})
+
+'''# Retorna uma página com 30 itens.
 @app.route('/alimentos', methods=['GET'])
 def pagina():
     # http://localhost:8989/alimentos?pag=1&campo=kcal&sort=-1
@@ -70,7 +76,7 @@ def alimento_nome(nome):
     
     res = jsonify(lista)
     res.status_code = 200
-    return res
+    return res'''
 
 if __name__ == "__main__":
     app.secret_key = 'm;4slF=Y6]Afb/.p9Xd7iO8(V0yU~R"'
