@@ -21,9 +21,11 @@ def home(id):
     lista = []
     for line in res:
         contact = {
+            'id': str(line['_id']),
             'name': line['name'],
             'tel': line['tel'],
             'email': line['email'],
+            'cep': line['cep'],
             'city': line['city'],
             'state': line['state'],
             'andress': line['andress'],
@@ -34,11 +36,32 @@ def home(id):
     return jsonify(lista)
 
 
-@app.route('/user/<string:id>/insere', methods=['POST'])
-def insereContato(id):
-    dados = request.data
-    print(dados)
-    return jsonify({'status': True})
+@app.route('/user/<string:user_id>/insere', methods=['POST'])
+def insereContato(user_id):
+    try:
+        dados = json.loads(request.data)
+        res = db.insertItem(dados)
+        return jsonify({'status': res})
+    except:
+        return jsonify({'status': False})
+
+
+@app.route('/user/<string:user_id>/delete/<string:contact_id>', methods=['DELETE'])
+def deletaContato(user_id, contact_id):
+    #request.data.get('text', '')
+    try:
+        res = db.deleteItem(contact_id)
+        return jsonify({'status': res})
+    except:
+        return jsonify({'status': False})
+
+@app.route('/user/<string:user_id>/update/<string:contact_id>', methods=['PUT'])
+def updateContato(user_id, contact_id):
+    dados = json.loads(request.data)
+    print(dados['name'])
+    print('\n***** ********\n')
+    return jsonify({'msg': True})
+
 
 '''# Retorna uma página com 30 itens.
 @app.route('/alimentos', methods=['GET'])

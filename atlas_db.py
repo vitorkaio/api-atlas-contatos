@@ -1,6 +1,7 @@
 #coding: utf-8
 
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 class AtlasDB(object):
     ''' Classe que abstrai o acesso ao mongodb Atlas. '''
@@ -23,6 +24,20 @@ class AtlasDB(object):
         '''
         res = self.__doc.find({'user_id': id}).sort('name', 1)
         return res
+
+    def insertItem(self, item):
+        ''' Insere um item no banco de dados. '''
+        res = self.__doc.insert_one(item)
+        if res == None:
+            return False
+        return True
+
+    def deleteItem(self, id):
+        ''' Deleta um item do banco de dados. '''
+        res = self.__doc.delete_one({'_id': ObjectId(str(id))}).deleted_count
+        if res == 0:
+            return False
+        return True
 
     def getAllCampoSort(self, campo, sort):
         '''Retorna todos os itens pelo campo crescente ou descrescente. 
