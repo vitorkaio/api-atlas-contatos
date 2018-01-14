@@ -2,6 +2,7 @@
 
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import json
 
 class AtlasDB(object):
     ''' Classe que abstrai o acesso ao mongodb Atlas. '''
@@ -16,7 +17,10 @@ class AtlasDB(object):
         self.__cliente = MongoClient(url)
         self.__col = self.__cliente[colecao]
         self.__doc = self.__col[documento]
-    
+
+
+    # ****************************************************** HOME ******************************************************
+
     def getAll(self, id):
         ''' Retorna todos os itens do banco de dados em ordem alfabética.
         Returns: 
@@ -25,6 +29,9 @@ class AtlasDB(object):
         res = self.__doc.find({'user_id': id}).sort('name', 1)
         return res
 
+
+    # ****************************************************** INSERE ******************************************************
+
     def insertItem(self, item):
         ''' Insere um item no banco de dados. '''
         res = self.__doc.insert_one(item)
@@ -32,12 +39,30 @@ class AtlasDB(object):
             return False
         return True
 
+
+    # ****************************************************** DELETE ******************************************************
+
     def deleteItem(self, id):
         ''' Deleta um item do banco de dados. '''
         res = self.__doc.delete_one({'_id': ObjectId(str(id))}).deleted_count
         if res == 0:
             return False
         return True
+
+
+    # ****************************************************** UPDATE ******************************************************
+
+    def updateItem(self, id, item):
+        ''' Atualiza um item '''
+        res = self.__doc.update_one({'_id': ObjectId(str(id))}, {"$set": item})
+        print('\n**** *****\n')
+        print(item)
+        if res.modified_count == 0:
+            return False
+        return True
+
+
+    # ****************************************************** OUTROS ******************************************************
 
     def getAllCampoSort(self, campo, sort):
         '''Retorna todos os itens pelo campo crescente ou descrescente. 
